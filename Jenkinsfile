@@ -2,14 +2,13 @@ pipeline {
   agent any
 
   tools {
-    jdk   'JDK 21'
-    maven 'Maven 3.9.9'
+    jdk   'JDK 21'       // Nom exact vu dans Manage Jenkins → Global Tool Configuration
+    maven 'Maven 3.9.9'  // idem
   }
 
   environment {
-    // Identifiant de la credential "sonar-token" créé en étape 5
-    SONAR_TOKEN = credentials('sonar-token')
-    SONAR_PROJECT_KEY = 'demo-java'
+    SONAR_TOKEN       = credentials('sonar-token')   // ID de la Secret text credential
+    SONAR_PROJECT_KEY = 'demo-java'                 // Clé projet SonarQube
     SONAR_HOST_URL    = 'http://sonarqube:9000'
   }
 
@@ -30,9 +29,9 @@ pipeline {
       steps {
         withSonarQubeEnv('SonarQube') {
           sh "./mvnw sonar:sonar \
-                -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
-                -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                -Dsonar.login=${env.SONAR_TOKEN}"
+                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                -Dsonar.host.url=${SONAR_HOST_URL} \
+                -Dsonar.login=${SONAR_TOKEN}"
         }
       }
     }
